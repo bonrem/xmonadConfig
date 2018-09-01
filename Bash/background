@@ -1,0 +1,2 @@
+#!/bin/sh
+'feh' '--bg-scale' '--no-xinerama'  '/home/ape/Pictures/XmonadWallPaper/black_and_white_earth.jpg' 

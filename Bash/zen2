@@ -1,0 +1,35 @@
+#!/bin/sh
+xpos=0
+ypos=780
+height=14
+width=1366
+screen=1
+alignment='r'
+font='-*-montecarlo-medium-r-normal-*-8-*-*-*-*-*-*-*'
+parameters="-x $xpos -y $ypos -xs $screen -h $height -w $width -ta $alignment -fn $font -title-name ZenTop -b 'black' "
+result1=''
+result2=''
+static ()
+{  	disk=" Disks `df  |grep '/dev/sda1' |tr -s ' ' |awk '{$1=$2=$3=$4=" ";print  "mount    " $6 "       "$5 }' `"
+	who=" ^bg(blue)^fg(green)^ca(1,~/.xmonad/menu) `whoami`  ^fg() ^bg() "
+	result1="$who  $disk "
+
+}
+update()
+{
+    dt=`date +'%c' `
+    ut=`uptime -p| tr -s '' | awk '{$1=" ";print $0}'`
+    result2="$dt \t   uptime: $ut"
+
+}
+main ()
+{ while :; do
+	update
+	final="$result1 \t\t\t $result2 "
+	echo  -e $final
+	sleep 1
+ done	
+}
+
+static
+main| dzen2  $parameters

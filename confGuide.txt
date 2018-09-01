@@ -1,0 +1,54 @@
+
+____XMONAD & Arch BONREM-1.0
+
+--SET BACKGROUND IMAGE
+	install feh 
+	for two monitor span "feh --bg-scale --no-xinerama <image>"
+	then do:
+	cp ~/.fehbg ~/.xmonad/background
+	in xmonad.hs add {1,2} :
+		1.import XMonad.util.SpawnOnce  
+			-contrib must be installed
+		then add :
+		2.	startup =do
+				spawnOnce "~/.xmonad/background"
+				...
+		3. startupHook=startup -- in defaultConfig
+--AUTO START APPS
+	with login manager eg gdm use .xprofile
+	with xorg use .xinitrc
+--change the 'X' cursor
+	add line:(to .xprofile)
+		xsetroot -cursor_name left_ptr &
+--Resolution 
+		to set resolution write a script and using xrandr configure the screen resolution and position,
+		later add script path to your login manager.conf 
+		example :
+		
+		#!/bin/sh
+		xrandr --output HDMI-1 --mode 1360x768 --pos 0x0 && xrandr --output VGA-1 --mode 1366x768 --pos
+		1400x0
+--Dmenu
+	install dmenu-x-y-w from git
+--Tmux
+	tmux reads .bash_profile
+	tmuxinator to manage panes
+	download tmux-powerline  mkdir ~/.tmux cp tmux-powerline to ~/.tmux conf .tmux.conf
+--hub
+	replaces git 
+	alias git="hub" ~/.bashrc
+--window class name
+	xprop | grep WM_CLASS <-run 
+--elm 
+	YAOURT elm-platform install the .bin
+--erlang
+	rabar3 configured in ~/.config/rebar3/rebar.conf
+--use xprop
+	to get window property this helps in window management and moving windows to specific workspaces
+-- keysym
+	for x86 keys import Graphics.X11.ExtraTypes.XF86 
+	to get the symbol name use xev and press key
+	to add mod key see xmodmap
+
+
+	

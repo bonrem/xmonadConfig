@@ -1,0 +1,63 @@
+#!/bin/sh
+usage()
+{ echo "working on it"
+}
+case "$1" in 
+	--volume )
+		echo "^fg(green)volume : $(amixer sget Master | grep -m1 '%]' | cut -d '[' -f2 | cut -d ']' -f1)^fg() "
+		;;
+	--date )
+		echo  "$(date +'%a %b %d %Y ')"
+		;;
+	--uptime )
+		echo " uptime:$(uptime -p| tr -s '' | awk '{$1=" ";print $0}') "
+		;;
+	--time )
+		echo "$(date +'%H:%M:%S ')"
+		;;
+	--cpu )
+		cpu_line=$(top -b -n 1 | grep "Cpu(s)" )
+		cpu_user=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(us(er)?))")
+		cpu_system=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(sys?))")
+		cpu_idle=$(echo "$cpu_line" | grep -Po "(\d+(.\d+)?)(?=%?\s?(id(le)?))")
+		if [ -n "$cpu_user" ] && [ -n "$cpu_system" ] && [ -n "$cpu_idle" ]; then
+			echo "User ${cpu_user}%    SYS  ${cpu_system}%   IDLE  ${cpu_idle}%" 
+			return 0
+		else
+			return 1
+		fi
+		;;
+	--lan )
+		rx1,rx2,rx=0
+		tx1,tx2,tx=0
+
+		rx1=`ifconfig ens133|grep RX | grep bytes | tr -s ' ' |awk '{print $5}'`
+		tx1=`ifconfig ens133|grep TX | grep bytes | tr -s ' ' |awk '{print $5}'`
+		
+		rx2=`ifconfig ens133|grep RX | grep bytes | tr -s ' ' |awk '{print $5}'`
+	    tx2=`ifconfig ens133|grep TX | grep bytes | tr -s ' ' |awk '{print $5}'`
+		rx=$[(rx2-rx1)/256]
+		tx=$[(tx2-tx1)/256]
+		echo "LAN rx: $rx kb/s tx : $tx  kb/s "
+		;;
+	--wlan )
+		rx1=`ifconfig ens133|grep RX | grep bytes | tr -s ' ' |awk '{print $5}'`
+		tx1=`ifconfig ens133|grep TX | grep bytes | tr -s ' ' |awk '{print $5}'`
+		sleep 1
+		rx2=`ifconfig ens133|grep RX | grep bytes | tr -s ' ' |awk '{print $5}'`
+	    tx2=`ifconfig ens133|grep TX | grep bytes | tr -s ' ' |awk '{print $5}'`
+		rx=$[(rx2-rx1)/256]
+		tx=$[(tx2-tx1)/256]
+		echo "WIFI rx: $rx  tx : $tx "
+		;;
+	--mem )
+		echo "mem : $(free -m | awk 'NR==2{printf "%.2f", $3*100/$2 }')%"
+		;;
+	--disk )
+		echo " Disks $(df  |awk '$NF=="/"{printf  "mount :   %s  ",$6 ;printf " %2s ",$5} ')"
+		;;	
+	* )
+		echo "value error"
+		exit 1
+esac
+
