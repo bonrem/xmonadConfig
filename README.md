@@ -1,5 +1,5 @@
-#xmonad config
-##Dependencies 
+# xmonad config
+## Dependencies 
  * feh
  * rofi
  * st terminal
