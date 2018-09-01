@@ -3,5 +3,5 @@
  * feh
  * rofi
  * st terminal
- * comppiz
+ 
  
