@@ -3,15 +3,15 @@ ____XMONAD & Arch BONREM-1.0
 
 --SET BACKGROUND IMAGE
 	install feh 
-	for two monitor span "feh --bg-scale --no-xinerama <image>"
+	for muiltihead span "feh --bg-scale --no-xinerama <image>"
 	then do:
-	cp ~/.fehbg ~/.xmonad/background
+	cp ~/.fehbg ~/.xmonad/Bash/background
 	in xmonad.hs add {1,2} :
 		1.import XMonad.util.SpawnOnce  
 			-contrib must be installed
 		then add :
 		2.	startup =do
-				spawnOnce "~/.xmonad/background"
+				spawnOnce "~/.xmonad/Bash/background"
 				...
 		3. startupHook=startup -- in defaultConfig
 --AUTO START APPS
