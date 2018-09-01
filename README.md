@@ -3,5 +3,6 @@
  * feh
  * rofi
  * st terminal
+ *  dzen2
  
  
