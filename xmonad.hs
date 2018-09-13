@@ -64,7 +64,7 @@ main =  do
 				,terminal			= bTerminal
 				,normalBorderColor	= bNormalBorderColor
 				,focusedBorderColor	= bFocusedBorderColor
-				,modMask			= myModMask
+				,modMask			= bModMask
 				,startupHook		= startup 
 				,handleEventHook    = clockEventHook
 				,workspaces			= bWorkspaces
@@ -86,7 +86,7 @@ bBrowser 	= "vivaldi-stable"
 
 
 --   | keybindings |
-myModMask	= mod4Mask
+bModMask	= mod4Mask
 altMask 	= mod1Mask
 --fnMask      = mod3Mask 				--mod3 is menu key and has to be added using xmodmap
 				-- config
@@ -94,27 +94,28 @@ bKeys conf = M.fromList $
     [
     --keys to Apps 
       
-      ((myModMask				, xK_Return	),spawn bTerminal )
-	, ((myModMask				, xK_p		),spawn "~/.xmonad/Bash/menu")		--Start dmenu from '~/.xmonad/menu.sh' (why:ease in dmenu config)
-    , ((myModMask               , xF86XK_AudioRaiseVolume ),	spawn "amixer set Master 5%+")
-    , ((myModMask               , xF86XK_AudioLowerVolume ),	spawn "amixer set Master 5%-")
-    , ((myModMask               , xF86XK_AudioMute        ),	spawn "amixer set Master toggle")
-	, ((0, xF86XK_Mail),  submap . M.fromList $ [ ((0, xF86XK_Mail),  spawn bBrowser)])
+      ((bModMask				, xK_Return	),spawn bTerminal )
+	, ((bModMask				, xK_p		),spawn "~/.xmonad/Bash/menu")		--Start dmenu from '~/.xmonad/menu.sh' (why:ease in dmenu config)
+    , ((0       		        , xF86XK_AudioRaiseVolume ),	spawn "amixer set Master 5%+")
+    , ((0                       , xF86XK_AudioLowerVolume ),	spawn "amixer set Master 5%-")
+    , ((0 					    , xF86XK_AudioMute        ),	spawn "amixer set Master toggle")
+	, ((0 						, xF86XK_Mail 			  ),  	spawn bBrowser)
+	--, ((0, xF86XK_Mail),  submap . M.fromList $ [ ((0, xF86XK_Mail),  spawn bBrowser)])
 	--, ((0, Pause      ),  submap . M.fromList $ [ ((0, Pause      ),  spawn bBrowser)])
     --Navigation Made easier
 
     , ((altMask					, xK_F4		), kill)
-    , ((myModMask				, xK_space	), sendMessage NextLayout)
-    , ((myModMask				, xK_n		), refresh)
+    , ((bModMask				, xK_space	), sendMessage NextLayout)
+    , ((bModMask				, xK_n		), refresh)
     			--window navigation
     , ((altMask				    , xK_Up		), windows S.swapMaster)
     , ((altMask 				, xK_Left	), windows S.swapUp)
     , ((altMask	     			, xK_Right	), windows S.swapDown)
     , ((altMask					, xK_Tab	), windows S.focusDown) 
     , ((altMask .|. shiftMask	, xK_Tab	), windows S.focusUp)
-    , ((myModMask 				, xK_Left	), sendMessage Shrink)
-    , ((myModMask				, xK_Right	), sendMessage Expand)
-    , ((myModMask				, xK_q		), broadcastMessage ReleaseResources >> restart "xmonad" True)
+    , ((bModMask 				, xK_Left	), sendMessage Shrink)
+    , ((bModMask				, xK_Right	), sendMessage Expand)
+    , ((bModMask				, xK_q		), broadcastMessage ReleaseResources >> restart "xmonad" True)
     			--workspace manupulation  bindings 
     , ((altMask					, xK_p     	), gotoMenu ) 	--go to app
 	, ((altMask					, xK_b     	), bringMenu) 	--bring	app	to	workspace
@@ -123,20 +124,20 @@ bKeys conf = M.fromList $
 	, ((controlMask .|. shiftMask           , xK_equal  ),sendMessage Mag.Toggle)
 	                   
 				-- Quit xmonad
-	 , ((myModMask .|. altMask 	, xK_q      ), io (exitWith ExitSuccess))
+	 , ((bModMask .|. altMask 	, xK_q      ), io (exitWith ExitSuccess))
     --Lock Screen
-    , ((myModMask              , xF86XK_HomePage       ), spawn "dm-tool switch-to-greeter") --requires  lightdm
+    , ((bModMask              , xF86XK_HomePage       ), spawn "dm-tool switch-to-greeter") --requires  lightdm
     -- Push window back into tiling
-    , ((myModMask              , xK_s       ), withFocused $ windows . S.sink) 
+    , ((bModMask              , xK_s       ), withFocused $ windows . S.sink) 
     ]
 
 	++ --move window to specific workspace
-    [((myModMask .|. shiftMask   , k        ), windows $ f i)
+    [((bModMask .|. shiftMask   , k        ), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
         , (f, m) <- [(S.greedyView, 0), (S.shift, shiftMask)]]
 	--Workspaces multi-head config : keep workspace one on screen 1
 	++
-	 [ ((m .|. myModMask, k), windows (f i))
+	 [ ((m .|. bModMask, k), windows (f i))
 	        | (i, k) <- zip (workspaces conf) ([xK_1 .. xK_9] )
 	        , (f, m) <- [ (viewOnScreen 1, 0)
 	                      ,(viewOnScreen 0, controlMask)
@@ -192,7 +193,7 @@ bmanageHook	= composeAll . concat $
 			,[className			=? c			--> doFullFloat		 	  	| c <- bFullFloat ]
 			]
 			where 
-				bFloat		= ["vlc","konsole","yakuake","plank","Guake"]
+				bFloat		= ["vlc","yakuake","plank","Guake"]
 				bFullFloat	= []
 				bWeb		= ["Chromium","Vivaldi-stable"]
 				bMedia		= ["vlc"]
@@ -207,13 +208,13 @@ bBorderWidth	= 1
 --colors::
 bNormalBorderColor 	= "#975d68" 
 bFocusedBorderColor	= "#dddddd"
+bBlack 				= "#000000"
 
 blayoutHook  =  gaps [(U,20), (D,18)] $ 
 				smartSpacing 4 $
-				limitWindows 10 $
-				avoidStruts $ 
+				limitWindows 10 $ 
 				--onWorkspace "www" Tall $ 
-				Tall 1 (3/100) (1/2)||| mosaic 2 [3,2]   ||| Full  --gaps
+				avoidStruts ( Tall 1 (3/100) (1/2)||| mosaic 2 [3,2]   ||| Full  )--gaps
 
 
 --   | menu and status bars  |
@@ -222,13 +223,13 @@ bLogHookLeft :: Handle -> X ()
 bLogHookLeft h = bLeftLogWithPP $  dzenPP 
     {
 		 ppOutput           =   hPutStrLn h
-      , ppVisible           =   dzenColor "green" "#1B1D1E"   	. pad
-      , ppCurrent           =    wrap "[ "" ]" . dzenColor "yellow" "#1B1D1E"  
-      , ppHidden            =   dzenColor "white" "#1B1D1E"		. pad
-      , ppHiddenNoWindows   =   dzenColor "#7b7b7b" "#1B1D1E"  	. pad
-      , ppUrgent            =   dzenColor "#ff0000" "#1B1D1E"  	. pad
+      , ppVisible           =   dzenColor "green"  	bgColor 	.pad
+      , ppCurrent           =    wrap "[ "" ]" . dzenColor "yellow" bgColor  
+      , ppHidden            =   dzenColor "white" 	bgColor		. pad
+      , ppHiddenNoWindows   =   dzenColor "#7b7b7b" bgColor  	. pad
+      , ppUrgent            =   dzenColor "#ff0000" bgColor  	. pad
       , ppSep               =   "    "
-      , ppLayout            =   dzenColor "#ebac54" "#1B1D1E"   .
+      , ppLayout            =   dzenColor "#ebac54" bgColor  	.
                                 (\x -> case x of
                                     "Spacing Tall"             ->      "Tall"
                                     "Spacing Mosaic"  		   ->      "Mosaic"
@@ -238,9 +239,9 @@ bLogHookLeft h = bLeftLogWithPP $  dzenPP
                                 )
       , ppTitle             =   ("  " ++) . dzenColor "blue" "#1B1D1E"  . wrap "| " "|" . trim  . dzenEscape . shorten 25
       , ppExtras 			= [logCmd "whoami" ]
-
-      
-    }
+ }
+ where 
+ 	bgColor=bBlack
 --bLogHookRight :: Handle -> X ()
 bLogHookRight  dzenBar2	= bRightLogWithPP $ bPP
 	{ ppOutput      =   hPutStrLn dzenBar2
