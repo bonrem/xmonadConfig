@@ -1,2 +1,2 @@
 #!/bin/sh
- 'dzen2' '-xs' '2' '-x' '0' '-w' '1366' '-h' '19' '-ta' 'r'  '-y' '0' '-fn' '-*-montecarlo-medium-r-normal-*-10-*-*-*-*-*-*-*'
+ 'dzen2' '-xs' '2' '-x' '0' '-w' '1366' '-h' '19' '-ta' 'r'  '-y' '0' '-fn' '-*-montecarlo-medium-r-normal-*-10-*-*-*-*-*-*-*' '-bg' '#000000'
